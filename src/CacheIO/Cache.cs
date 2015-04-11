@@ -13,6 +13,11 @@ namespace CacheIO
 		private IndexFile _index255;
 		private RandomAccessFile _data;
 
+		public Index[] IndexList
+		{
+			get { return _indexList; }
+		}
+
 
 		public Cache(string folder) : this(folder, true) { }
 
@@ -35,11 +40,6 @@ namespace CacheIO
 					_indexList[i] = index;
 				}
 			}
-		}
-
-		public Index[] getIndexList()
-		{
-			return _indexList;
 		}
 	}
 }

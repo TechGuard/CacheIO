@@ -11,6 +11,16 @@ namespace CacheIO
 		private bool _newProtocol;
 		private byte[] _readBuffer = new byte[520];
 
+		public int Id
+		{
+			get { return _id; }
+		}
+
+		public int ArchiveCount
+		{
+			get { return (int)(_index.getLength() / 6L); }
+		}
+
 
 		public IndexFile(int id, RandomAccessFile data, RandomAccessFile index, bool newProtocol)
 		{
@@ -18,16 +28,6 @@ namespace CacheIO
 			_data = data;
 			_index = index;
 			_newProtocol = newProtocol;
-		}
-
-		public int getID()
-		{
-			return _id;
-		}
-
-		public int getArchivesCount()
-		{
-			return (int)(_index.getLength() / 6L);
 		}
 
 		public Archive getArchive(int id)

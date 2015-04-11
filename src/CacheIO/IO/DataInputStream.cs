@@ -15,24 +15,11 @@ namespace CacheIO.IO
 			_length = buffer.Length;
 		}
 
-
-		public int readByte()
+		public override bool CanRead
 		{
-			return getRemaining() > 0 ? _buffer[_offset++] : 0;
+			get { return true; }
 		}
 
-		public void readBytes(byte[] buffer, int offset, int length)
-		{
-			for (int i = offset; i < length + offset; i++)
-			{
-				buffer[i] = (byte)readByte();
-			}
-		}
-
-		public void readBytes(byte[] buffer)
-		{
-			readBytes(buffer, 0, buffer.Length);
-		}
 
 		public int readUnsignedByte()
 		{
@@ -199,7 +186,7 @@ namespace CacheIO.IO
 
 		public int readBigSmart()
 		{
-			if (_buffer[_offset] >= 0)
+			if (_buffer[_position] >= 0)
 			{
 				return readUnsignedShort();
 			}

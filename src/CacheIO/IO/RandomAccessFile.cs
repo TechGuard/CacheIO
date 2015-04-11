@@ -30,8 +30,6 @@ namespace CacheIO.IO
 			FileStream fin = new FileStream(_file, FileMode.Open, FileAccess.Read);
 			BinaryReader reader = new BinaryReader(fin);
 
-			_offset += offset;
-
 			fin.Position = _offset;
 
 			reader.Read(buffer, offset, length);
@@ -45,8 +43,6 @@ namespace CacheIO.IO
 		public void Write(byte[] buffer, int offset, int length) {
 			FileStream fout = new FileStream(_file, FileMode.Open, FileAccess.Write);
 			BinaryWriter writer = new BinaryWriter(fout);
-
-			_offset += offset;
 
 			fout.Position = _offset;
 

@@ -12,8 +12,13 @@ namespace CacheIO.IO
 		public DataOutputStream(byte[] buffer)
 		{
 			_buffer = buffer;
-			_offset = buffer.Length;
 			_length = buffer.Length;
+			_position = buffer.Length;
+		}
+
+		public override bool CanWrite
+		{
+			get { return true; }
 		}
 	}
 }
