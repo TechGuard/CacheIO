@@ -7,7 +7,11 @@ namespace Example
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine(Class1.getText());
+			Cache cache = new Cache("../../cache/");
+
+			Console.WriteLine("Cache contains " + cache.getIndexList().Length + " indexes.");
+
+			Console.ReadLine(); // Pause
 		}
 	}
 }
