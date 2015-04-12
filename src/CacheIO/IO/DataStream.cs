@@ -77,7 +77,7 @@ namespace CacheIO.IO
 
 			for (int i = offset; i < count + offset; i++)
 			{
-				buffer[i] = (byte) readByte();
+				buffer[i] = (byte)readByte();
 				read++;
 			}
 
@@ -130,6 +130,53 @@ namespace CacheIO.IO
 		public override void SetLength(long value)
 		{
 			_length = value;
+		}
+
+		public void decodeXTEA(int[] keys)
+		{
+			decodeXTEA(keys, 5, Length);
+		}
+
+		public void decodeXTEA(int[] keys, long start, long end)
+		{
+			long beginPos = Position;
+			Position = start;
+
+			int size = (int)((end - start) / 8L);
+
+			for (int i = 0; i < size; i++)
+			{
+				int int1 = readInt();
+				int int2 = readInt();
+				int sum = -957401312;
+				int delta = -1640531527;
+
+				for (int j = 0; j < 32; j++)
+				{
+					int2 -= (keys[(int)((uint)(sum & 0x1c84) >> 11)] + sum ^ ((int)((uint)(int1) >> 5) ^ int1 << 4) + int1);
+					sum -= delta;
+					int1 -= ((int)((uint)(int2) >> 5) ^ int2 << 4) + int2 ^ keys[sum & 0x3] + sum;
+				}
+
+				Position -= 8;
+				writeInt(int1);
+				writeInt(int2);
+			}
+
+			Position = beginPos;
+		}
+
+		private int readInt()
+		{
+			return (((0xff & _buffer[Position++]) << 16) + (((0xff & _buffer[Position++]) << 24) + ((_buffer[Position++] & 0xff) << 8) + (_buffer[Position++] & 0xff)));
+		}
+
+		private void writeInt(int value)
+		{
+			_buffer[Position++] = (byte)(value >> 24);
+			_buffer[Position++] = (byte)(value >> 16);
+			_buffer[Position++] = (byte)(value >> 8);
+			_buffer[Position++] = (byte)value;
 		}
 	}
 }

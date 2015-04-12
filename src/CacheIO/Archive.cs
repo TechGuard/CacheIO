@@ -56,7 +56,11 @@ namespace CacheIO
 		private void decompress(byte[] data)
 		{
 			DataInputStream stream = new DataInputStream(data);
-			//if(_keys != null && _keys.length != 0) stream.decodeXTEA(_keys);
+
+			if (_keys != null && _keys.Length != 0)
+			{
+				stream.decodeXTEA(_keys);
+			}
 
 			int compression = stream.readUnsignedByte();
 			_compression = (CompressionType)(compression > 2 ? 2 : compression);
