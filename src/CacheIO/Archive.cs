@@ -1,7 +1,7 @@
 ﻿using System;
 using CacheIO.IO;
-using ICSharpCode.SharpZipLib.BZip2;
-using ICSharpCode.SharpZipLib.GZip;
+using CacheIO.Util.GZip;
+using CacheIO.Util.BZip2;
 
 namespace CacheIO
 {
@@ -20,6 +20,16 @@ namespace CacheIO
 
 		private byte[] _data;
 		private int[] _keys;
+
+		public int Id
+		{
+			get { return _id; }
+		}
+
+		public byte[] Data
+		{
+			get { return _data; }
+		}
 
 
 		public Archive(int id, byte[] data, int[] keys)
@@ -59,6 +69,8 @@ namespace CacheIO
 
 			int length;
 
+			Console.WriteLine("Decompress #" + _id + ": " + _compression);
+
 			switch (_compression)
 			{
 				case CompressionType.RAW:
@@ -70,7 +82,7 @@ namespace CacheIO
 
 				case CompressionType.BZIP:
 					length = stream.readInt();
-
+					
 					if (length <= 0)
 					{
 						_data = null;
@@ -79,10 +91,7 @@ namespace CacheIO
 					{
 						_data = new byte[length];
 						checkRevision(stream, compressedLength);
-
-						BZip2InputStream bzip = new BZip2InputStream(stream);
-						bzip.Read(_data, 0, compressedLength);
-						bzip.Close();
+						BZip2Decompressor.Decompress(_data, data);
 					}
 					break;
 
@@ -97,10 +106,7 @@ namespace CacheIO
 					{
 						_data = new byte[length];
 						checkRevision(stream, compressedLength);
-
-						GZipInputStream gzip = new GZipInputStream(stream);
-						gzip.Read(_data, 0, compressedLength);
-						gzip.Close();
+						GZipDecompressor.Decompress(_data, stream);
 					}
 					break;
 			}

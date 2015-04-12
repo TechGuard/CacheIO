@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archive.cs" />
+    <Compile Include="ArchiveReference.cs" />
     <Compile Include="Cache.cs" />
+    <Compile Include="FileReference.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="IndexFile.cs" />
     <Compile Include="IO\DataInputStream.cs" />
@@ -52,7 +51,11 @@
     <Compile Include="IO\RandomAccessFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceTable.cs" />
+    <Compile Include="Util\BZip2\BZip2BlockEntry.cs" />
+    <Compile Include="Util\BZip2\BZip2Decompressor.cs" />
+    <Compile Include="Util\GZip\GZipDecompressor.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

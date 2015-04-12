@@ -9,7 +9,7 @@ namespace CacheIO
 		private RandomAccessFile _data;
 		private RandomAccessFile _index;
 		private bool _newProtocol;
-		private byte[] _readBuffer = new byte[520];
+		private byte[] _readCacheBuffer;
 
 		public int Id
 		{
@@ -22,12 +22,13 @@ namespace CacheIO
 		}
 
 
-		public IndexFile(int id, RandomAccessFile data, RandomAccessFile index, bool newProtocol)
+		public IndexFile(int id, RandomAccessFile data, RandomAccessFile index, byte[] readCacheBuffer, bool newProtocol)
 		{
 			_id = id;
 			_data = data;
 			_index = index;
 			_newProtocol = newProtocol;
+			_readCacheBuffer = readCacheBuffer;
 		}
 
 		public Archive getArchive(int id)
@@ -52,17 +53,17 @@ namespace CacheIO
 			{
 				return null;
 			}
-
+			
 			_index.Seek(6 * id);
-			_index.Read(_readBuffer, 0, 6);
+			_index.Read(_readCacheBuffer, 0, 6);
 
-			int archiveLength = (_readBuffer[2] & 0xFF) + (((0xFF & _readBuffer[0]) << 16) + (_readBuffer[1] << 8 & 0xFF00));
+			int archiveLength = (_readCacheBuffer[2] & 0xFF) + (((0xFF & _readCacheBuffer[0]) << 16) + (_readCacheBuffer[1] << 8 & 0xFF00));
 			if (archiveLength < 0 || archiveLength > 1000000)
 			{
 				return null;
 			}
 
-			int sector = ((_readBuffer[3] & 0xFF) << 16) - (-(0xFF00 & _readBuffer[4] << 8) - (_readBuffer[5] & 0xFF));
+			int sector = ((_readCacheBuffer[3] & 0xFF) << 16) - (-(0xFF00 & _readCacheBuffer[4] << 8) - (_readCacheBuffer[5] & 0xFF));
 			if (sector <= 0 || _data.getLength() / 520L < sector)
 			{
 				return null;
@@ -98,12 +99,12 @@ namespace CacheIO
 						dataBlockSize = 510;
 					}
 
-					_data.Read(_readBuffer, 0, headerSize + dataBlockSize);
+					_data.Read(_readCacheBuffer, 0, headerSize + dataBlockSize);
 
-					currentIndex = _readBuffer[9] & 0xFF;
-					currentArchive = ((_readBuffer[1] & 0xFF) << 16) + ((_readBuffer[0] & 0xFF) << 24) + ((0xFF00 & _readBuffer[2] << 8) - -(_readBuffer[3] & 0xFF));
-					currentPart = ((_readBuffer[4] & 0xFF) << 8) + (0xFF & _readBuffer[5]);
-					nextSector = (_readBuffer[8] & 0xFF) + (0xFF00 & _readBuffer[7] << 8) + ((0xFF & _readBuffer[6]) << 16);
+					currentIndex = _readCacheBuffer[9] & 0xFF;
+					currentArchive = ((_readCacheBuffer[1] & 0xFF) << 16) + ((_readCacheBuffer[0] & 0xFF) << 24) + ((0xFF00 & _readCacheBuffer[2] << 8) - -(_readCacheBuffer[3] & 0xFF));
+					currentPart = ((_readCacheBuffer[4] & 0xFF) << 8) + (0xFF & _readCacheBuffer[5]);
+					nextSector = (_readCacheBuffer[8] & 0xFF) + (0xFF00 & _readCacheBuffer[7] << 8) + ((0xFF & _readCacheBuffer[6]) << 16);
 				}
 				else
 				{
@@ -114,15 +115,15 @@ namespace CacheIO
 						dataBlockSize = 512;
 					}
 
-					_data.Read(_readBuffer, 0, headerSize + dataBlockSize);
+					_data.Read(_readCacheBuffer, 0, headerSize + dataBlockSize);
 
-					currentIndex = _readBuffer[7] & 0xFF;
-					currentArchive = (0xFF & _readBuffer[1]) + (0xFF00 & _readBuffer[0] << 8);
-					currentPart = ((_readBuffer[2] & 0xFF) << 8) + (0xFF & _readBuffer[3]);
-					nextSector = (_readBuffer[6] & 0xFF) + (0xFF00 & _readBuffer[5] << 8) + ((0xFF & _readBuffer[4]) << 16);
+					currentIndex = _readCacheBuffer[7] & 0xFF;
+					currentArchive = (0xFF & _readCacheBuffer[1]) + (0xFF00 & _readCacheBuffer[0] << 8);
+					currentPart = ((_readCacheBuffer[2] & 0xFF) << 8) + (0xFF & _readCacheBuffer[3]);
+					nextSector = (_readCacheBuffer[6] & 0xFF) + (0xFF00 & _readCacheBuffer[5] << 8) + ((0xFF & _readCacheBuffer[4]) << 16);
 				}
 
-				if ((_newProtocol && id != currentArchive) || currentPart != part || id != currentIndex)
+				if ((_newProtocol && id != currentArchive) || currentPart != part || _id != currentIndex)
 				{
 					return null;
 				}
@@ -134,7 +135,7 @@ namespace CacheIO
 
 				for (int i = headerSize; dataBlockSize + headerSize > i; i++)
 				{
-					data[readBytesCount++] = _readBuffer[i];
+					data[readBytesCount++] = _readCacheBuffer[i];
 				}
 
 				part++;

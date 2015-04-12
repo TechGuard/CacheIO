@@ -9,7 +9,7 @@ namespace Example
 		{
 			Cache cache = new Cache("../../cache/");
 
-			Console.WriteLine("Cache contains " + cache.getIndexList().Length + " indexes.");
+			Console.WriteLine("Cache contains " + cache.IndexList.Length + " indexes.");
 
 			Console.ReadLine(); // Pause
 		}
