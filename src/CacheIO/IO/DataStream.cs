@@ -67,7 +67,7 @@ namespace CacheIO.IO
 
 		public int readByte()
 		{
-			return Remaining > 0 ? _buffer[_position++] : 0;
+			return Remaining > 0 ? (sbyte)_buffer[_position++] : 0;
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)

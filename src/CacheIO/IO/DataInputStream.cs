@@ -1,4 +1,6 @@
-﻿namespace CacheIO.IO
+﻿using System;
+
+namespace CacheIO.IO
 {
 	public class DataInputStream : DataStream
 	{
@@ -154,6 +156,11 @@
 			return readUnsignedByte() + (readUnsignedByte() << 8) + (readUnsignedByte() << 16) + (readUnsignedByte() << 24);
 		}
 
+		public int read24BitInt()
+		{
+			return (readUnsignedByte() << 16) + (readUnsignedByte() << 8) + (readUnsignedByte());
+		}
+
 		public long readLong()
 		{
 			long p1 = readInt() & 0xFFFFFFFF;
@@ -171,7 +178,7 @@
 			{
 				result += char0;
 			}
-
+			
 			return result;
 		}
 
@@ -184,7 +191,7 @@
 
 		public int readBigSmart()
 		{
-			if (_buffer[_position] >= 0)
+			if ((sbyte)(_buffer[_position]) >= 0)
 			{
 				return readUnsignedShort();
 			}
