@@ -1,19 +1,17 @@
-﻿using System;
-
-namespace CacheIO.Util.BZip2
+﻿namespace CacheIO.Util.BZip2
 {
 	public class BZip2Decompressor
 	{
 		private static int[] anIntArray257;
 		private static BZip2BlockEntry entryInstance = new BZip2BlockEntry();
 
-		public static void Decompress(byte[] output, byte[] input)
+		public static void Decompress(byte[] decompressedData, byte[] packedData)
 		{
-			entryInstance.aByteArray2224 = input;
+			entryInstance.aByteArray2224 = packedData;
 			entryInstance.anInt2209 = 9; // blockSize
-			entryInstance.aByteArray2212 = output;
+			entryInstance.aByteArray2212 = decompressedData;
 			entryInstance.anInt2203 = 0;
-			entryInstance.anInt2206 = output.Length;
+			entryInstance.anInt2206 = decompressedData.Length;
 			entryInstance.anInt2232 = 0;
 			entryInstance.anInt2207 = 0;
 			entryInstance.anInt2217 = 0;
@@ -36,7 +34,8 @@ namespace CacheIO.Util.BZip2
 			}
 		}
 
-		private static void method1786(int[] ai, int[] ai1, int[] ai2, byte[] abyte0, int i, int j, int k)
+		private static void method1786(int[] ai, int[] ai1, int[] ai2,
+				byte[] abyte0, int i, int j, int k)
 		{
 			int l = 0;
 			for (int i1 = i; i1 <= j; i1++)
@@ -82,21 +81,16 @@ namespace CacheIO.Util.BZip2
 			int j1 = entry.anInt2206;
 			int k1 = j1;
 			int l1 = entry.anInt2225 + 1;
-
-			while (true)
+			for (; ; )
 			{
 				if (i > 0)
 				{
-					while (true)
+					for (; ; )
 					{
 						if (j1 == 0)
-						{
-							goto label410;
-						}
+							goto while_2_;
 						if (i == 1)
-						{
 							break;
-						}
 						abyte0[i1] = byte4;
 						i--;
 						i1++;
@@ -118,11 +112,11 @@ namespace CacheIO.Util.BZip2
 					if (j == l1)
 					{
 						i = 0;
-						break;
+						goto while_2_;
 					}
 					byte4 = (byte)k;
 					l = ai[l];
-					byte byte0 = (byte)(l & 0xFF);
+					byte byte0 = (byte)(l & 0xff);
 					l >>= 8;
 					j++;
 					if (byte0 != k)
@@ -130,7 +124,8 @@ namespace CacheIO.Util.BZip2
 						k = byte0;
 						if (j1 == 0)
 						{
-							i = 1; break;
+							i = 1;
+							goto while_2_;
 						}
 						abyte0[i1] = byte4;
 						i1++;
@@ -142,7 +137,7 @@ namespace CacheIO.Util.BZip2
 						if (j1 == 0)
 						{
 							i = 1;
-							break;
+							goto while_2_;
 						}
 						abyte0[i1] = byte4;
 						i1++;
@@ -152,35 +147,31 @@ namespace CacheIO.Util.BZip2
 				}
 				i = 2;
 				l = ai[l];
-				byte byte1 = (byte)(l & 0xFF);
+				byte byte1 = (byte)(l & 0xff);
 				l >>= 8;
-				j++; if (j != l1)
+				if (++j != l1)
 				{
 					if (byte1 != k)
-					{
 						k = byte1;
-					}
 					else
 					{
 						i = 3;
 						l = ai[l];
-						byte byte2 = (byte)(l & 0xFF);
+						byte byte2 = (byte)(l & 0xff);
 						l >>= 8;
-						j++; if (j != l1)
+						if (++j != l1)
 						{
 							if (byte2 != k)
-							{
 								k = byte2;
-							}
 							else
 							{
 								l = ai[l];
-								byte byte3 = (byte)(l & 0xFF);
+								byte byte3 = (byte)(l & 0xff);
 								l >>= 8;
 								j++;
-								i = (byte3 & 0xFF) + 4;
+								i = (byte3 & 0xff) + 4;
 								l = ai[l];
-								k = (byte)(l & 0xFF);
+								k = (byte)(l & 0xff);
 								l >>= 8;
 								j++;
 							}
@@ -188,8 +179,7 @@ namespace CacheIO.Util.BZip2
 					}
 				}
 			}
-
-			label410:
+		while_2_:
 			entry.anInt2216 += k1 - j1;
 			entry.aByte2201 = byte4;
 			entry.anInt2222 = i;
@@ -215,7 +205,7 @@ namespace CacheIO.Util.BZip2
 		private static int method1790(int i, BZip2BlockEntry entry)
 		{
 			int j;
-			while (true)
+			for (; ; )
 			{
 				if (entry.anInt2232 >= i)
 				{
@@ -224,8 +214,7 @@ namespace CacheIO.Util.BZip2
 					j = k;
 					break;
 				}
-				entry.anInt2207 = (entry.anInt2207 << 8
-						   | entry.aByteArray2224[entry.anInt2209] & 0xff);
+				entry.anInt2207 = (entry.anInt2207 << 8 | entry.aByteArray2224[entry.anInt2209] & 0xff);
 				entry.anInt2232 += 8;
 				entry.anInt2209++;
 				entry.anInt2217++;
@@ -233,7 +222,7 @@ namespace CacheIO.Util.BZip2
 			return j;
 		}
 
-		private static void clearBlockEntryInstance()
+		public static void clearBlockEntryInstance()
 		{
 			entryInstance = null;
 		}
@@ -351,9 +340,9 @@ namespace CacheIO.Util.BZip2
 							byte8 = entry.aByteArrayArray2229[l3][l1];
 					}
 					method1786(entry.anIntArrayArray2230[l3],
-						   entry.anIntArrayArray2218[l3],
-						   entry.anIntArrayArray2210[l3],
-						   entry.aByteArrayArray2229[l3], byte8, i, i4);
+							entry.anIntArrayArray2218[l3],
+							entry.anIntArrayArray2210[l3],
+							entry.aByteArrayArray2229[l3], byte8, i, i4);
 					entry.anIntArray2200[l3] = byte8;
 				}
 				int l4 = entry.anInt2215 + 1;
@@ -386,8 +375,7 @@ namespace CacheIO.Util.BZip2
 				int l6 = j8;
 				byte byte9;
 				int k7;
-				for (k7 = method1790(l6, entry); k7 > ai[l6];
-				 k7 = k7 << 1 | byte9)
+				for (k7 = method1790(l6, entry); k7 > ai[l6]; k7 = k7 << 1 | byte9)
 				{
 					l6++;
 					byte9 = method1788(entry);
@@ -420,8 +408,8 @@ namespace CacheIO.Util.BZip2
 							int i7 = j8;
 							byte byte10;
 							int l7;
-							for (l7 = method1790(i7, entry); l7 > ai[i7];
-								 l7 = l7 << 1 | byte10)
+							for (l7 = method1790(i7, entry); l7 > ai[i7]; l7 = l7 << 1
+									| byte10)
 							{
 								i7++;
 								byte10 = method1788(entry);
@@ -429,10 +417,7 @@ namespace CacheIO.Util.BZip2
 							k5 = ai2[l7 - ai1[i7]];
 						} while (k5 == 0 || k5 == 1);
 						i6++;
-						byte byte5
-						= (entry.aByteArray2211
-						   [(entry.aByteArray2204[entry.anIntArray2226[0]]
-							 & 0xff)]);
+						byte byte5 = (entry.aByteArray2211[(entry.aByteArray2204[entry.anIntArray2226[0]] & 0xff)]);
 						entry.anIntArray2228[byte5 & 0xff] += i6;
 						for (/**/; i6 > 0; i6--)
 						{
@@ -451,18 +436,14 @@ namespace CacheIO.Util.BZip2
 							for (/**/; i11 > 3; i11 -= 4)
 							{
 								int j11 = i10 + i11;
-								entry.aByteArray2204[j11]
-								= entry.aByteArray2204[j11 - 1];
-								entry.aByteArray2204[j11 - 1]
-								= entry.aByteArray2204[j11 - 2];
-								entry.aByteArray2204[j11 - 2]
-								= entry.aByteArray2204[j11 - 3];
-								entry.aByteArray2204[j11 - 3]
-								= entry.aByteArray2204[j11 - 4];
+								entry.aByteArray2204[j11] = entry.aByteArray2204[j11 - 1];
+								entry.aByteArray2204[j11 - 1] = entry.aByteArray2204[j11 - 2];
+								entry.aByteArray2204[j11 - 2] = entry.aByteArray2204[j11 - 3];
+								entry.aByteArray2204[j11 - 3] = entry.aByteArray2204[j11 - 4];
 							}
 							for (/**/; i11 > 0; i11--)
-								entry.aByteArray2204[i10 + i11]
-								= entry.aByteArray2204[i10 + i11 - 1];
+								entry.aByteArray2204[i10 + i11] = entry.aByteArray2204[i10
+										+ i11 - 1];
 							entry.aByteArray2204[i10] = byte6;
 						}
 						else
@@ -472,15 +453,12 @@ namespace CacheIO.Util.BZip2
 							int j10 = entry.anIntArray2226[k10] + l10;
 							byte6 = entry.aByteArray2204[j10];
 							for (/**/; j10 > entry.anIntArray2226[k10]; j10--)
-								entry.aByteArray2204[j10]
-								= entry.aByteArray2204[j10 - 1];
+								entry.aByteArray2204[j10] = entry.aByteArray2204[j10 - 1];
 							entry.anIntArray2226[k10]++;
 							for (/**/; k10 > 0; k10--)
 							{
 								entry.anIntArray2226[k10]--;
-								entry.aByteArray2204[entry.anIntArray2226[k10]]
-								= (entry.aByteArray2204
-								   [entry.anIntArray2226[k10 - 1] + 16 - 1]);
+								entry.aByteArray2204[entry.anIntArray2226[k10]] = (entry.aByteArray2204[entry.anIntArray2226[k10 - 1] + 16 - 1]);
 							}
 							entry.anIntArray2226[0]--;
 							entry.aByteArray2204[entry.anIntArray2226[0]] = byte6;
@@ -491,19 +469,16 @@ namespace CacheIO.Util.BZip2
 								{
 									for (int k9 = 15; k9 >= 0; k9--)
 									{
-										entry.aByteArray2204[l9]
-										= (entry.aByteArray2204
-										   [entry.anIntArray2226[j9] + k9]);
+										entry.aByteArray2204[l9] = (entry.aByteArray2204[entry.anIntArray2226[j9]
+												+ k9]);
 										l9--;
 									}
 									entry.anIntArray2226[j9] = l9 + 1;
 								}
 							}
 						}
-						entry.anIntArray2228[(entry.aByteArray2211[byte6 & 0xff]
-								  & 0xff)]++;
-						anIntArray257[l5]
-						= entry.aByteArray2211[byte6 & 0xff] & 0xff;
+						entry.anIntArray2228[(entry.aByteArray2211[byte6 & 0xff] & 0xff)]++;
+						anIntArray257[l5] = entry.aByteArray2211[byte6 & 0xff] & 0xff;
 						l5++;
 						if (j5 == 0)
 						{
@@ -519,8 +494,8 @@ namespace CacheIO.Util.BZip2
 						int j7 = j8;
 						byte byte11;
 						int i8;
-						for (i8 = method1790(j7, entry); i8 > ai[j7];
-						 i8 = i8 << 1 | byte11)
+						for (i8 = method1790(j7, entry); i8 > ai[j7]; i8 = i8 << 1
+								| byte11)
 						{
 							j7++;
 							byte11 = method1788(entry);

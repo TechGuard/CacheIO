@@ -111,8 +111,6 @@ namespace CacheIO
 						archive.FileList[archive.ValidFileIds[index2]].NameHash = (stream.readInt());
 				}
 			}
-
-			Console.WriteLine(validArchivesCount + " Archives\n");
 		}
 	}
 }

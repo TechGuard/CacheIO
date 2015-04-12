@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CacheIO.Util.BZip2
+﻿namespace CacheIO.Util.BZip2
 {
 	public class BZip2BlockEntry
 	{
@@ -51,17 +45,17 @@ namespace CacheIO.Util.BZip2
 			aByteArray2219 = new byte[18002];
 			anIntArray2220 = new int[257];
 			anIntArrayArray2218 = new int[6][];
-			for (int i = 0; i < 6; i++) anIntArrayArray2218[i] = new int[258];
+			for (int i = 0; i < anIntArrayArray2218.Length; i++) anIntArrayArray2218[i] = new int[258];
 			aBooleanArray2205 = new bool[16];
 			aBooleanArray2213 = new bool[256];
 			anInt2209 = 0;
 			anIntArray2226 = new int[16];
 			anIntArrayArray2210 = new int[6][];
-			for (int i = 0; i < 6; i++) anIntArrayArray2210[i] = new int[258];
+			for (int i = 0; i < anIntArrayArray2210.Length; i++) anIntArrayArray2210[i] = new int[258];
 			aByteArrayArray2229 = new byte[6][];
-			for (int i = 0; i < 6; i++) aByteArrayArray2229[i] = new byte[258];
+			for (int i = 0; i < aByteArrayArray2229.Length; i++) aByteArrayArray2229[i] = new byte[258];
 			anIntArrayArray2230 = new int[6][];
-			for (int i = 0; i < 6; i++) anIntArrayArray2230[i] = new int[258];
+			for (int i = 0; i < anIntArrayArray2230.Length; i++) anIntArrayArray2230[i] = new int[258];
 			anIntArray2228 = new int[256];
 		}
 	}
