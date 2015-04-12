@@ -119,12 +119,6 @@ namespace CacheIO
 					}
 					break;
 			}
-
-			for (int i = 0; i < Math.Min(_data.Length, 10); i++)
-			{
-				Console.Write("[" + (sbyte)_data[_data.Length - i - 1] + "]");
-			}
-			Console.WriteLine();
 		}
 
 		private void checkRevision(DataInputStream stream, int compressedLength)

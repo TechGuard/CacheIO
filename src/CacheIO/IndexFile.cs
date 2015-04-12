@@ -1,5 +1,4 @@
-﻿using System;
-using CacheIO.IO;
+﻿using CacheIO.IO;
 
 namespace CacheIO
 {

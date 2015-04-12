@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CacheIO.IO
+﻿namespace CacheIO.IO
 {
 	public class DataOutputStream : DataStream
 	{

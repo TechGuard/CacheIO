@@ -34,81 +34,107 @@ namespace CacheIO
 			int protocol = stream.readUnsignedByte();
 
 			if (protocol < 5 || protocol > 7)
+			{
 				throw new ArgumentOutOfRangeException("INVALID PROTOCOL");
+			}
 
 			if (protocol >= 6)
+			{
 				_revision = stream.readInt();
+			}
 
 			int hash = stream.readUnsignedByte();
 			_named = (0x1 & hash) != 0;
 			_usingWhirpool = (0x2 & hash) != 0;
 
-			int validArchivesCount = (protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort());
+			int validArchivesCount = protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort();
 			_validArchiveIds = new int[validArchivesCount];
 
 			int lastArchiveId = 0;
 			int biggestArchiveId = 0;
-			for (int index = 0; index < validArchivesCount; index++)
+			for (int i = 0; i < validArchivesCount; i++)
 			{
 				int archiveId = (lastArchiveId = lastArchiveId + (protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort()));
 				if (archiveId > biggestArchiveId)
+				{
 					biggestArchiveId = archiveId;
-				_validArchiveIds[index] = archiveId;
+				}
+
+				_validArchiveIds[i] = archiveId;
 			}
 
 			_archiveList = new ArchiveReference[biggestArchiveId + 1];
 
-			for (int index = 0; index < validArchivesCount; index++)
-				_archiveList[_validArchiveIds[index]] = new ArchiveReference();
+			for (int i = 0; i < validArchivesCount; i++)
+			{
+				_archiveList[_validArchiveIds[i]] = new ArchiveReference();
+			}
 
 			if (_named)
 			{
-				for (int index = 0; index < validArchivesCount; index++)
-					_archiveList[_validArchiveIds[index]].NameHash = (stream.readInt());
-			}
-			if (_usingWhirpool)
-			{
-				for (int index = 0; index < validArchivesCount; index++)
+				for (int i = 0; i < validArchivesCount; i++)
 				{
-					byte[] whirpool = new byte[64];
-					stream.Read(whirpool, 0, 64);
-					_archiveList[_validArchiveIds[index]].Whirpool = (whirpool);
+					_archiveList[_validArchiveIds[i]].NameHash = stream.readInt();
 				}
 			}
 
-			for (int index = 0; index < validArchivesCount; index++)
-				_archiveList[_validArchiveIds[index]].CRC = (stream.readInt());
-			for (int index = 0; index < validArchivesCount; index++)
-				_archiveList[_validArchiveIds[index]].Revision = (stream.readInt());
-			for (int index = 0; index < validArchivesCount; index++)
-				_archiveList[_validArchiveIds[index]].ValidFileIds = (new int[(protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort())]);
+			if (_usingWhirpool)
+			{
+				for (int i = 0; i < validArchivesCount; i++)
+				{
+					byte[] whirpool = new byte[64];
+					stream.Read(whirpool, 0, 64);
+					_archiveList[_validArchiveIds[i]].Whirpool = (whirpool);
+				}
+			}
 
-			for (int index = 0; index < validArchivesCount; index++)
+			for (int i = 0; i < validArchivesCount; i++)
+			{
+				_archiveList[_validArchiveIds[i]].CRC = stream.readInt();
+			}
+			for (int i = 0; i < validArchivesCount; i++)
+			{
+				_archiveList[_validArchiveIds[i]].Revision = stream.readInt();
+			}
+			for (int i = 0; i < validArchivesCount; i++)
+			{
+				_archiveList[_validArchiveIds[i]].ValidFileIds = new int[(protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort())];
+			}
+
+			for (int i = 0; i < validArchivesCount; i++)
 			{
 				int lastFileId = 0;
 				int biggestFileId = 0;
-				ArchiveReference archive = _archiveList[_validArchiveIds[index]];
+				ArchiveReference archive = _archiveList[_validArchiveIds[i]];
 
-				for (int index2 = 0; index2 < archive.ValidFileIds.Length; index2++)
+				for (int j = 0; j < archive.ValidFileIds.Length; j++)
 				{
 					int fileId = (lastFileId = lastFileId + (protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort()));
 					if (fileId > biggestFileId)
+					{
 						biggestFileId = fileId;
-					archive.ValidFileIds[index2] = fileId;
+					}
+
+					archive.ValidFileIds[j] = fileId;
 				}
 
 				archive.FileList = (new FileReference[biggestFileId + 1]);
 
-				for (int index2 = 0; index2 < archive.ValidFileIds.Length; index2++)
-					archive.FileList[archive.ValidFileIds[index2]] = new FileReference();
+				for (int j = 0; j < archive.ValidFileIds.Length; j++)
+				{
+					archive.FileList[archive.ValidFileIds[j]] = new FileReference();
+				}
 			}
+
 			if (_named)
 			{
-				for (int index = 0; index < validArchivesCount; index++)
+				for (int i = 0; i < validArchivesCount; i++)
 				{
-					ArchiveReference archive = _archiveList[_validArchiveIds[index]];
-					for (int index2 = 0; index2 < archive.ValidFileIds.Length; index2++)
-						archive.FileList[archive.ValidFileIds[index2]].NameHash = (stream.readInt());
+					ArchiveReference archive = _archiveList[_validArchiveIds[i]];
+					for (int j = 0; j < archive.ValidFileIds.Length; j++)
+					{
+						archive.FileList[archive.ValidFileIds[j]].NameHash = (stream.readInt());
+					}
 				}
 			}
 		}

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CacheIO
+﻿namespace CacheIO
 {
 	public class Index
 	{
