@@ -26,6 +26,11 @@ namespace CacheIO
 			get { return _id; }
 		}
 
+		public int Revision
+		{
+			get { return _revision; }
+		}
+
 		public byte[] Data
 		{
 			get { return _data; }
@@ -77,8 +82,6 @@ namespace CacheIO
 			}
 
 			int length;
-
-			Console.WriteLine("Decompress #" + _id + ": " + _compression);
 
 			switch (_compression)
 			{

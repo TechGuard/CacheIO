@@ -53,7 +53,9 @@
     <Compile Include="ReferenceTable.cs" />
     <Compile Include="Util\BZip2\BZip2BlockEntry.cs" />
     <Compile Include="Util\BZip2\BZip2Decompressor.cs" />
+    <Compile Include="Util\CRC32\CRC32Generator.cs" />
     <Compile Include="Util\GZip\GZipDecompressor.cs" />
+    <Compile Include="Util\Whirlpool\Whirlpool.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

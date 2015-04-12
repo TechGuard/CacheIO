@@ -1,10 +1,16 @@
-﻿namespace CacheIO
+﻿using CacheIO.Util.CRC32;
+using CacheIO.Util.Whirlpool;
+
+namespace CacheIO
 {
 	public class Index
 	{
 		private IndexFile _index;
 		private IndexFile _index255;
 		private ReferenceTable _table;
+
+		private int _crc;
+		private byte[] _whirlpool;
 
 		private byte[][][] _cachedFiles;
 
@@ -30,8 +36,8 @@
 				return;
 			}
 
-			//crc = CRC32HGenerator.getHash(archiveData);
-			//whirlpool = Whirlpool.getHash(archiveData, 0, archiveData.length);
+			_crc = CRC32Generator.GetHash(archiveData);
+			_whirlpool = Whirlpool.GetHash(archiveData);
 
 			Archive archive = new Archive(Id, archiveData, null);
 			if (archive.Data == null) return;
