@@ -83,7 +83,6 @@ namespace CacheIO
 			for (int index = 0; index < validArchivesCount; index++)
 				_archiveList[_validArchiveIds[index]].ValidFileIds = (new int[(protocol >= 7 ? stream.readBigSmart() : stream.readUnsignedShort())]);
 
-			if (_archive.Id != 4)
 			for (int index = 0; index < validArchivesCount; index++)
 			{
 				int lastFileId = 0;
@@ -98,12 +97,12 @@ namespace CacheIO
 					archive.ValidFileIds[index2] = fileId;
 				}
 
-				/*archive.FileList = (new FileReference[biggestFileId + 1]);
+				archive.FileList = (new FileReference[biggestFileId + 1]);
 
 				for (int index2 = 0; index2 < archive.ValidFileIds.Length; index2++)
-					archive.FileList[archive.ValidFileIds[index2]] = new FileReference();*/
+					archive.FileList[archive.ValidFileIds[index2]] = new FileReference();
 			}
-			/*if (_named)
+			if (_named)
 			{
 				for (int index = 0; index < validArchivesCount; index++)
 				{
@@ -111,9 +110,9 @@ namespace CacheIO
 					for (int index2 = 0; index2 < archive.ValidFileIds.Length; index2++)
 						archive.FileList[archive.ValidFileIds[index2]].NameHash = (stream.readInt());
 				}
-			}*/
+			}
 
-			Console.WriteLine(validArchivesCount + " Archives");
+			Console.WriteLine(validArchivesCount + " Archives\n");
 		}
 	}
 }

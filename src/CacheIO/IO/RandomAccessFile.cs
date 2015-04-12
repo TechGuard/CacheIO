@@ -28,29 +28,21 @@ namespace CacheIO.IO
 
 		public void Read(byte[] buffer, int offset, int length) {
 			FileStream fin = new FileStream(_file, FileMode.Open, FileAccess.Read);
-			BinaryReader reader = new BinaryReader(fin);
 
 			fin.Position = _offset;
-
-			reader.Read(buffer, offset, length);
-
+			fin.Read(buffer, offset, length);
 			_offset += length;
 
-			reader.Close();
 			fin.Close();
 		}
 
 		public void Write(byte[] buffer, int offset, int length) {
 			FileStream fout = new FileStream(_file, FileMode.Open, FileAccess.Write);
-			BinaryWriter writer = new BinaryWriter(fout);
 
 			fout.Position = _offset;
-
-			writer.Write(buffer);
-
+			fout.Write(buffer, offset, length);
 			_offset += length;
 
-			writer.Close();
 			fout.Close();
 		}
 	}
