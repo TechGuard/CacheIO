@@ -2,7 +2,6 @@
 using CacheIO.IO;
 using CacheIO.Util.CRC32;
 using CacheIO.Util.NameHash;
-using CacheIO.Util.Whirlpool;
 
 namespace CacheIO
 {
@@ -50,7 +49,7 @@ namespace CacheIO
 			}
 
 			_crc = CRC32Generator.GetHash(archiveData);
-			_whirlpool = Whirlpool.GetHash(archiveData);
+			_whirlpool = Util.Whirlpool.Whirlpool.GetHash(archiveData);
 
 			Archive archive = new Archive(Id, archiveData, null);
 			if (archive.Data == null) return;
