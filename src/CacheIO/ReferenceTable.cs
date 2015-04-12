@@ -20,6 +20,11 @@ namespace CacheIO
 			get { return _archiveList; }
 		}
 
+		public int[] ValidArchiveIds
+		{
+			get { return _validArchiveIds; }
+		}
+
 
 		public ReferenceTable(Archive archive)
 		{
