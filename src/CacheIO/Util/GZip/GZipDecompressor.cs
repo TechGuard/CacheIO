@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+﻿using ICSharpCode.SharpZipLib.GZip;
 
 namespace CacheIO.Util.GZip
 {
@@ -6,7 +6,7 @@ namespace CacheIO.Util.GZip
 	{
 		public static void Decompress(byte[] output, System.IO.Stream stream)
 		{
-			GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress);
+			GZipInputStream gzip = new GZipInputStream(stream);
 			gzip.Read(output, 0, output.Length);
 			gzip.Close();
 		}
